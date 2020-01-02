@@ -6,9 +6,13 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import rootReducer from './modules';
-import myLogger from './middlewares/myLogger';
+import logger from 'redux-logger';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-const store = createStore(rootReducer, applyMiddleware(myLogger));
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(logger)),
+); // can apply multiple middelwares: applyMiddleware(m1, m2, m3, ...)
 
 ReactDOM.render(
   <Provider store={store}>
