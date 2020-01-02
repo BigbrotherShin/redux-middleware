@@ -5,6 +5,10 @@
 const myLogger = store => next => action => {
   console.log(action); // ouputs current action
   const result = next(action); // gives a action to next middleware or reducer
+
+  // checks state after update
+  console.log('\t', store.getState()) // '\t' 는 탭 문자 입니다.
+
   return result; // return value is result of dispatch(action). default: undefined
 };
 
