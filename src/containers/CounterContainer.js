@@ -1,7 +1,7 @@
 import React from 'react';
 import Counter from '../components/Counter';
 import { useSelector, useDispatch } from 'react-redux';
-import { increase, decrease } from '../modules/counter';
+import { increaseAsync, decreaseAsync } from '../modules/counter';
 
 function CounterContainer() {
   // useSelector는 리덕스 스토어의 상태를 조회하는 Hook입니다.
@@ -10,10 +10,10 @@ function CounterContainer() {
   const dispatch = useDispatch();
 
   const onIncrease = () => {
-    dispatch(increase());
+    dispatch(increaseAsync());
   };
   const onDecreasse = () => {
-    dispatch(decrease());
+    dispatch(decreaseAsync());
   };
 
   return (
