@@ -16,7 +16,7 @@ import {
   createPromiseSaga,
   createPromiseSagaById,
 } from '../lib/asyncUtils';
-import { takeEvery, getContext } from 'redux-saga/effects';
+import { takeEvery, getContext, select } from 'redux-saga/effects';
 
 /* action type */
 
@@ -31,11 +31,14 @@ const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
 const GET_POST_ERROR = 'GET_POST_ERROR';
 const GO_TO_HOME = 'GO_TO_HOME';
 
+const PRINT_STATE = 'PRINT_STATE';
+
 // 기존에 redux-thunk로 구현 할 때에는 getPosts 와 getPost 는 thunk 함수였는데,
 // 이제는 redux-saga를 사용하니까 순수 액션 객체를 반환하는 액션 생성 함수로 구현 할 수 있습니다.
 export const getPosts = () => ({ type: GET_POSTS });
 export const getPost = id => ({ type: GET_POST, payload: id, meta: id });
 export const goToHome = () => ({ type: GO_TO_HOME }); // 순수 액션 객체 반환
+export const printState = () => ({ type: PRINT_STATE });
 
 const getPostsSaga = createPromiseSaga(GET_POSTS, postsAPI.getPosts);
 const getPostSaga = createPromiseSagaById(GET_POST, postsAPI.getPostById);
@@ -43,12 +46,18 @@ function* goToHomeSaga() {
   const history = yield getContext('history'); // getContext 도 saga effect 중의 하나
   history.push('/'); // 사가 내부에서 history를 사용할 일이 있다면, saga middleware를 만들 때 context에 history를 등록하여 사용
 }
+function* printStateSaga() {
+  // 사가를 작성할 때 로직에서 현재 상태에 따라 조건부 작업을 하는 경우 select라는 effect 사용
+  const state = yield select(state => state.posts);
+  console.log(state);
+}
 
 // 사가들을 합치기 : action들을 모니터링
 export function* postsSaga() {
   yield takeEvery(GET_POSTS, getPostsSaga); // 모든 GET_POSTS 액션에 대하여 getPostsSaga 실행
   yield takeEvery(GET_POST, getPostSaga); // 모든 GET_POST 액션에 대하여 getPostSaga 실행
   yield takeEvery(GO_TO_HOME, goToHomeSaga);
+  yield takeEvery(PRINT_STATE, printStateSaga);
 }
 
 // initialState 쪽도 반복되는 코드를 initial() 함수를 사용해서 리팩토링 했습니다.
