@@ -29,7 +29,7 @@ const store = createStore(
   ),
 ); // can apply multiple middelwares: applyMiddleware(m1, m2, m3, ...)
 
-sagaMiddleware.run(rootSaga); // 루트 사가를 실행해줍니다.
+sagaMiddleware.run(rootSaga); // 루트 사가를 실행해줍니다. (rootSaga함수를 호출할 필요는 없음)
 // 주의: 스토어 생성이 된 다음에 위 코드를 실행해야합니다.
 
 ReactDOM.render(
